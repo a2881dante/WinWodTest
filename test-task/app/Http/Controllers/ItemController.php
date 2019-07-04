@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use http\Env\Response;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -57,6 +58,19 @@ class ItemController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        return view('items.item-edit', [
+            'item' => Item::find($id)
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -66,25 +80,20 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $item = Item::find($id);
-
-        $item->name = $request->query('name');
-
         if ($request->file('file')) {
             $path = $request->file('file')->store('app/public/img');
-            $path = 'storage'.substr($path, 10);
-        } else {
-            $path = "";
+            $item->path = $path = 'storage'.substr($path, 10);
         }
+        $item->name = $request->input('name');
 
         $item->sizes()->detach();
-        if($request->input('sizes') && $sizes = explode(',',$request->input('sizes'))) {
-            foreach ($sizes as $size) {
+        if($request->input('sizes')) {
+            foreach ($request->input('sizes') as $size) {
                 $item->sizes()->attach($size);
             }
         }
-
         $item->save();
-
+        return redirect()->route('index');
     }
 
     /**

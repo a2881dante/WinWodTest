@@ -13,12 +13,12 @@
 
 Route::get('/', function(){
     return view('index');
-});
+})->name('index');
 
 Route::resource('items'
     , 'ItemController'
     , [
-        'except' => ['create', 'edit']
+        'except' => ['create']
     ]);
 
 Route::resource('sizes'

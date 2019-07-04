@@ -41,6 +41,9 @@
             this.getSizes();
         },
         methods: {
+            /**
+             *
+             */
             storeItem(){
                 let formData = new FormData();
                 formData.append('file', this.file);
@@ -62,9 +65,15 @@
                     }
                 );
             },
+            /**
+             *
+             */
             handleFileUpload(){
                 this.file = this.$refs.file.files[0];
             },
+            /**
+             *
+             */
             getSizes(){
                 axios
                     .get('./sizes')

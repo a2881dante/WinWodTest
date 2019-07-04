@@ -22,7 +22,7 @@
                     <tbody>
                     <tr v-for="item in items">
                         <th scope="row">{{item.id}}</th>
-                        <td><img class="item-img" :src="'./'+item.avatar_url"></td>
+                        <td><img class="item-img" :src="`./${item.avatar_url}`"></td>
                         <td>{{item.name}}</td>
                         <td>
                             <span v-for="size in item.sizes">
@@ -31,7 +31,7 @@
                         </td>
                         <td>
                             <div class="btn-group ">
-                                <a class="btn btn-primary" :href="'./item/'+item.id+'/edit'">Изменить</a>
+                                <a class="btn btn-primary" :href="`./items/${item.id}/edit`">Изменить</a>
                                 <a class="btn btn-danger" @click="deleteItem(item)">Удалить</a>
                             </div>
                         </td>
@@ -50,13 +50,16 @@
             return {
                 isNewItem: false,
                 isLoad: true,
-                items: []
+                items: [],
             }
         },
         mounted() {
             this.getItems();
         },
         methods: {
+            /**
+             *
+             */
             getItems(){
                 this.isLoad = true;
                 axios
@@ -69,6 +72,11 @@
                         alert("Ошибка загрузки");
                     });
             },
+
+            /**
+             *
+             * @param item
+             */
             deleteItem(item){
                 console.log(item.id);
                 axios
@@ -83,6 +91,11 @@
                         alert("Ошибка при удалении товара");
                     });
             },
+
+            /**
+             *
+             * @param item
+             */
             storeItem(item){
                 this.items.push(item);
             }
