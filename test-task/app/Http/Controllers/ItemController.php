@@ -25,15 +25,24 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->file('file')) {
+            $path = $request->file('file')->store('app/public/img');
+            $path = 'storage'.substr($path, 10);
+        } else {
+            $path = "";
+        }
+
         $item = new Item([
-            'name'          => $request->query('item-name'),
-            'avatar_url'    => ''
+            'name'          => $request->input('name'),
+            'avatar_url'    => $path,
         ]);
         $item->save();
-        foreach ($request->query('sizes') as $size){
-            $item->sizes()->attach($size);
+        if($request->input('sizes') && $sizes = explode(',',$request->input('sizes'))) {
+            foreach ($sizes as $size) {
+                $item->sizes()->attach($size);
+            }
         }
-        return $item;
+        return Item::with('sizes')->find($item->id);
     }
 
     /**
@@ -57,8 +66,25 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $item = Item::find($id);
+
         $item->name = $request->query('name');
+
+        if ($request->file('file')) {
+            $path = $request->file('file')->store('app/public/img');
+            $path = 'storage'.substr($path, 10);
+        } else {
+            $path = "";
+        }
+
+        $item->sizes()->detach();
+        if($request->input('sizes') && $sizes = explode(',',$request->input('sizes'))) {
+            foreach ($sizes as $size) {
+                $item->sizes()->attach($size);
+            }
+        }
+
         $item->save();
+
     }
 
     /**

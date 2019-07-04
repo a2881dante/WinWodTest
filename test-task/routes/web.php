@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function(){
+    return view('index');
 });
+
+Route::resource('items'
+    , 'ItemController'
+    , [
+        'except' => ['create', 'edit']
+    ]);
+
+Route::resource('sizes'
+    , 'SizeController'
+    , [
+        'only' => ['index']
+    ]);
